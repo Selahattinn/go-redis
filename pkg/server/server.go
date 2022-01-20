@@ -21,7 +21,7 @@ type Config struct {
 
 	Service *service.Config `yaml:"service"`
 	//Redis Part
-	DB *repository.RedisConfig `yaml:"redis"`
+	Redis *repository.RedisConfig `yaml:"redis"`
 }
 
 // Instance represents an instance of the server
@@ -43,11 +43,11 @@ func NewInstance(cfg *Config) *Instance {
 func (i *Instance) Start() {
 	var err error
 	var router = mux.NewRouter()
-	database, err := repository.NewDatabase(i.Config.DB)
+	redis, err := repository.NewRedisRepository(i.Config.Redis)
 	if err != nil {
 		logrus.WithError(err).Fatal("Failed to connect to redis")
 	}
-	i.Service, err = service.NewProvider(i.Config.Service, *database)
+	i.Service, err = service.NewProvider(i.Config.Service, redis)
 	if err != nil {
 		logrus.WithError(err).Fatal("Could not create service provider")
 	}
