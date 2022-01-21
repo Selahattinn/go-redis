@@ -66,3 +66,6 @@ release: build-darwin-amd64 build-linux-amd64 build-windows-amd64
 
 test:
 	go test ./...
+
+dockerize:
+	docker-compose up --build -d

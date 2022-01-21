@@ -15,3 +15,5 @@ services:
     build:
         # build the image using the Dockerfile we have in this project. Can use an image instead.
       context: .
+    ports: 
+      - "8080:8080"

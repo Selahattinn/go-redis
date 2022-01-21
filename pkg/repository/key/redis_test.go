@@ -22,6 +22,7 @@ var (
 	}
 )
 
+// mockInitialize creates a mock and a mock client
 func mockInitialize() *redis.Client {
 	mr, err := miniredis.Run()
 	if err != nil {
@@ -38,12 +39,15 @@ func mockInitialize() *redis.Client {
 func TestRedisRepository_Get(t *testing.T) {
 	client := mockInitialize()
 	mock := redismock.NewNiceMock(client)
+	// Mock Initialize
 	mock.Set(key.ID, key.Value, 0)
 
+	// Redis Repository Initialize
 	r, err := NewRedisRepository(client)
 	if err != nil {
 		log.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
+	// Get function request
 	res, err := r.Get(key.ID)
 	assert.NoError(t, err)
 	assert.Equal(t, key.Value, res)
@@ -53,6 +57,7 @@ func TestRedisRepository_Get(t *testing.T) {
 func TestRedisRepository_Store(t *testing.T) {
 	client := mockInitialize()
 	mock := redismock.NewNiceMock(client)
+	// Redis Repository Initialize
 	r, err := NewRedisRepository(client)
 	if err != nil {
 		log.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
@@ -69,12 +74,15 @@ func TestRedisRepository_Store(t *testing.T) {
 func TestRedisRepository_GetAll(t *testing.T) {
 	client := mockInitialize()
 	mock := redismock.NewNiceMock(client)
+	// Redis Repository Initialize
 	r, err := NewRedisRepository(client)
 	if err != nil {
 		log.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
+	// Set two key to redis
 	mock.Set(key.ID, key.Value, 0)
 	mock.Set(key2.ID, key2.Value, 0)
+
 	keys, err := r.GetAll()
 	if err != nil {
 		log.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
@@ -87,10 +95,12 @@ func TestRedisRepository_GetAll(t *testing.T) {
 func TestRedisRepository_Exist(t *testing.T) {
 	client := mockInitialize()
 	mock := redismock.NewNiceMock(client)
+	// Redis Repository Initialize
 	r, err := NewRedisRepository(client)
 	if err != nil {
 		log.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
+	// set a key to redis
 	mock.Set(key.ID, key.Value, 0)
 	found, err := r.Exist(key.ID)
 	assert.NoError(t, err)
@@ -101,10 +111,12 @@ func TestRedisRepository_Exist(t *testing.T) {
 func TestRedisRepository_ExistFalse(t *testing.T) {
 	client := mockInitialize()
 	mock := redismock.NewNiceMock(client)
+	// Redis Repository Initialize
 	r, err := NewRedisRepository(client)
 	if err != nil {
 		log.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
+	// set a key to redis
 	mock.Set(key.ID, key.Value, 0)
 	found, err := r.Exist(key.ID)
 	assert.NoError(t, err)
@@ -115,10 +127,12 @@ func TestRedisRepository_ExistFalse(t *testing.T) {
 func TestRedisRepository_Delete(t *testing.T) {
 	client := mockInitialize()
 	mock := redismock.NewNiceMock(client)
+	// Redis Repository Initialize
 	r, err := NewRedisRepository(client)
 	if err != nil {
 		log.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
+	// set a key to redis
 	mock.Set(key.ID, key.Value, 0)
 	err = r.Delete(key.ID)
 	assert.NoError(t, err)
@@ -130,17 +144,22 @@ func TestRedisRepository_Delete(t *testing.T) {
 func TestRedisRepository_DeleteAll(t *testing.T) {
 	client := mockInitialize()
 	mock := redismock.NewNiceMock(client)
+	// Redis Repository Initialize
 	r, err := NewRedisRepository(client)
 	if err != nil {
 		log.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
+	// Set two key to redis
 	mock.Set(key.ID, key.Value, 0)
 	mock.Set(key2.ID, key2.Value, 0)
+
 	err = r.DeleteAll()
 	assert.NoError(t, err)
+
 	result, err := mock.Get(key.ID).Result()
 	assert.Error(t, err)
 	assert.Equal(t, "", result)
+
 	result, err = mock.Get(key2.ID).Result()
 	assert.Error(t, err)
 	assert.Equal(t, "", result)
