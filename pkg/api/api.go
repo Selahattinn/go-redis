@@ -29,13 +29,13 @@ func New(router *mux.Router, svc service.Service) (*API, error) {
 	api.Router.HandleFunc("/api/v1/health", api.corsMiddleware(api.logMiddleware(api.healthHandler))).Methods("GET")
 
 	// Endpoints for redis
-	api.Router.HandleFunc("keys", api.corsMiddleware(api.logMiddleware(api.StoreKey))).Methods("POST")
-	api.Router.HandleFunc("keys", api.corsMiddleware(api.logMiddleware(api.GetAllKeys))).Methods("GET")
-	api.Router.HandleFunc("keys", api.corsMiddleware(api.logMiddleware(api.DeleteAllKeys))).Methods("DELETE")
-	api.Router.HandleFunc("keys/{id}", api.corsMiddleware(api.logMiddleware(api.CheckKey))).Methods("HEAD")
-	api.Router.HandleFunc("keys/{id}", api.corsMiddleware(api.logMiddleware(api.GetKey))).Methods("GET")
-	api.Router.HandleFunc("keys/{id}", api.corsMiddleware(api.logMiddleware(api.UpdateKey))).Methods("PUT")
-	api.Router.HandleFunc("keys/{id}", api.corsMiddleware(api.logMiddleware(api.DeleteKey))).Methods("DELETE")
+	api.Router.HandleFunc("/keys", api.corsMiddleware(api.logMiddleware(api.StoreKey))).Methods("POST")
+	api.Router.HandleFunc("/keys", api.corsMiddleware(api.logMiddleware(api.GetAllKeys))).Methods("GET")
+	api.Router.HandleFunc("/keys", api.corsMiddleware(api.logMiddleware(api.DeleteAllKeys))).Methods("DELETE")
+	api.Router.HandleFunc("/keys/{id}", api.corsMiddleware(api.logMiddleware(api.CheckKey))).Methods("HEAD")
+	api.Router.HandleFunc("/keys/{id}", api.corsMiddleware(api.logMiddleware(api.GetKey))).Methods("GET")
+	api.Router.HandleFunc("/keys/{id}", api.corsMiddleware(api.logMiddleware(api.UpdateKey))).Methods("PUT")
+	api.Router.HandleFunc("/keys/{id}", api.corsMiddleware(api.logMiddleware(api.DeleteKey))).Methods("DELETE")
 
 	return api, nil
 }

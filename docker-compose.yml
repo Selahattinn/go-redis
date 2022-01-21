@@ -1,0 +1,17 @@
+# 1. Specify the version for docker-compose.yml
+version: "3.8"
+
+# 2. Generate the serivces needed (redis)
+services:
+  redis:
+    container_name: "redis"
+    image: redis:latest
+    # Specify the redis.conf file to use and add a password.
+    ports: 
+      - "6379:6379"
+    # map the volumes to that redis has the custom conf file from this project.
+  go:
+    container_name: "redisapi"
+    build:
+        # build the image using the Dockerfile we have in this project. Can use an image instead.
+      context: .

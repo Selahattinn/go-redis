@@ -41,12 +41,15 @@ func NewInstance(cfg *Config) *Instance {
 
 // Start starts the server
 func (i *Instance) Start() {
-	var err error
 	var router = mux.NewRouter()
+
+	//Redis Layer Initialize
 	redis, err := repository.NewRedisRepository(i.Config.Redis)
 	if err != nil {
 		logrus.WithError(err).Fatal("Failed to connect to redis")
 	}
+
+	//Service Layer Initialize
 	i.Service, err = service.NewProvider(i.Config.Service, redis)
 	if err != nil {
 		logrus.WithError(err).Fatal("Could not create service provider")
@@ -74,9 +77,6 @@ func (i *Instance) Start() {
 
 // Shutdown stops the server
 func (i *Instance) Shutdown() {
-	// Shutdown all dependencies
-	//i.DB.CloseConnection()
-
 	// Shutdown HTTP server
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
